@@ -1,6 +1,6 @@
 import sys
 
-from cli.users import commands
+from cli.users import commands as users_commands
 
 def display_help():
     print("""
@@ -48,15 +48,13 @@ def run(args):
 
     elif option in ["create-user"]:
         pass
-        commands.create_user.run(args)
+        users_commands.create_user.run(args)
 
     elif option in ["get-all"]:
         pass
-        #users.commands.get_all.run(args)
 
     elif option in ["get-user"]:
         pass
-        #users.commands.get_user.run(args)
 
     elif option in ["update-user"]:
         pass

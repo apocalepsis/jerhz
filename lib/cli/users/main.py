@@ -1,5 +1,7 @@
 import sys
 
+from cli.users import commands
+
 def display_help():
     print("""
 Usage:
@@ -46,7 +48,7 @@ def run(args):
 
     elif option in ["create-user"]:
         pass
-        #users.commands.create_user.run(args)
+        commands.create_user.run(args)
 
     elif option in ["get-all"]:
         pass

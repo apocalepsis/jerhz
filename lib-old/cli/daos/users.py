@@ -9,8 +9,9 @@ class BaseDAO:
         self.db_password = "Passw0rd!"
 
     def test(self):
-        conn = mysql.connect(host=self.db_host,database=self.db_name,
-            user=self.db_user,password=self.db_password)
+        try:
+            conn = mysql.connect(host=self.db_host,database=self.db_name,
+                user=self.db_user,password=self.db_password)
         conn.close()
 
 dao = BaseDAO()

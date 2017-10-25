@@ -1,8 +1,9 @@
 import sys
 import re
-import sqlite3
+import mysql.connector
 
 from cli.users import validators as users_validators
+from cli.daos import users as users_dao
 
 params = {
     "username" : None,

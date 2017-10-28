@@ -1,5 +1,3 @@
-from lib.utils.cipher import AESCipher
-
 class User:
 
     def __init__(self,username,password,type,uid,gid):

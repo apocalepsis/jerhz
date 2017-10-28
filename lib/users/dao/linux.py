@@ -60,7 +60,7 @@ class DAO:
 
             sql = "DELETE FROM users WHERE {}='{}'".format(attr,value)
 
-            cursor = conn.cursor(buffered=True)
+            cursor = conn.cursor()
             cursor.execute(sql)
             conn.commit()
 
@@ -76,7 +76,40 @@ class DAO:
 
         return result
 
-    def find_by_attr(self,attr,value):
+    def delete_all(self):
+
+        result = {
+            "status" : 0,
+            "payload" : None
+        }
+
+        conn = None
+        cursor = None
+
+        try:
+
+            conn = mysql.connect(host=self.db_host,database=self.db_name,
+                user=self.db_user,password=self.db_password)
+
+            sql = "DELETE * FROM users"
+
+            cursor = conn.cursor()
+            cursor.execute(sql)
+            conn.commit()
+
+        except Exception as e:
+            result["status"] = 1
+            result["payload"] = e
+
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
+
+        return result
+
+    def get_by_attr(self,attr,value):
 
         result = {
             "status" : 0,
@@ -112,7 +145,7 @@ class DAO:
 
         return result
 
-    def all(self):
+    def get_all(self):
 
         result = {
             "status" : 0,

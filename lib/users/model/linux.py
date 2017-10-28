@@ -1,3 +1,5 @@
+from lib.utils.cipher import AESCipher
+
 class User:
 
     def __init__(self,username,password,type,uid,gid):
@@ -8,4 +10,4 @@ class User:
         self.gid = gid
 
     def __str__(self):
-        return "['{}','{}','{}',{},{}]".format(self.username,self.password,self.type,self.uid,self.gid)
+        return "{}|{}|{}|{}|{}".format(self.username,self.password,self.type,self.uid,self.gid)

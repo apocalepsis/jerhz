@@ -31,8 +31,6 @@ class DAO:
             cursor.execute(sql)
             conn.commit()
 
-            result["payload"] = str(user)
-
         except Exception as e:
             result["status"] = 1
             result["payload"] = e
@@ -45,11 +43,38 @@ class DAO:
 
         return result
 
-    def delete(self,user):
-        pass
+    def delete_by_attr(self,attr,value):
 
-    def update(self,user):
-        pass
+        result = {
+            "status" : 0,
+            "payload" : None
+        }
+
+        conn = None
+        cursor = None
+
+        try:
+
+            conn = mysql.connect(host=self.db_host,database=self.db_name,
+                user=self.db_user,password=self.db_password)
+
+            sql = "DELETE FROM users WHERE {}='{}'".format(attr,value)
+
+            cursor = conn.cursor(buffered=True)
+            cursor.execute(sql)
+            conn.commit()
+
+        except Exception as e:
+            result["status"] = 1
+            result["payload"] = e
+
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
+
+        return result
 
     def find_by_attr(self,attr,value):
 
@@ -67,6 +92,42 @@ class DAO:
                 user=self.db_user,password=self.db_password)
 
             sql = "SELECT * FROM users WHERE {}='{}'".format(attr,value)
+
+            cursor = conn.cursor(buffered=True)
+            cursor.execute(sql)
+
+            for row in cursor:
+                user = LinuxUser(username=row[0],password=row[1],type=row[2],uid=row[3],gid=row[4])
+                result["payload"].append(user)
+
+        except Exception as e:
+            result["status"] = 1
+            result["payload"] = e
+
+        finally:
+            if cursor:
+                cursor.close()
+            if conn:
+                conn.close()
+
+        return result
+
+    def all(self):
+
+        result = {
+            "status" : 0,
+            "payload" : []
+        }
+
+        conn = None
+        cursor = None
+
+        try:
+
+            conn = mysql.connect(host=self.db_host,database=self.db_name,
+                user=self.db_user,password=self.db_password)
+
+            sql = "SELECT * FROM users ORDER BY username"
 
             cursor = conn.cursor(buffered=True)
             cursor.execute(sql)

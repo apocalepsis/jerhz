@@ -1,7 +1,7 @@
 import sys
-import lib
+import cli
 
 args = sys.argv.copy()
 args.pop(0)
 
-lib.main.run(args)
+cli.main.run(args)

@@ -1,6 +1,6 @@
 import sys
 
-from lib import users
+from cli.commands import users
 
 def display_help():
     print("""

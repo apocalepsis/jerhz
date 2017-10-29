@@ -1,0 +1,25 @@
+jerhz.py
+cli
+    main.py
+    users
+        main.py
+        commands
+            create-user.py
+            get-all.py
+            get-user.py
+            update-user.py
+            delete-all.py
+            delete-user.py
+lib
+    users
+        daos
+            linux.py
+            zeppelin.py
+        validators
+            main.py
+        model.py
+            linux.py
+            zeppelin.py
+
+To install pycrypto on emr
+python3 -m pip install pycrypto

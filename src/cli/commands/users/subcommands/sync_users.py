@@ -33,6 +33,7 @@ def run(args):
             continue
         elif result["out"]:
             user_exists = True
+            print("User exists.")
 
         if not user_exists:
             print("Creating user <{}>".format(user.get_username()))

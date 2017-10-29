@@ -49,4 +49,3 @@ class Validator:
         if not attr_value:
             return False
         return True
-

@@ -14,7 +14,7 @@ def run(args):
 
     print("    Checking jerhz dir <{}>".format(properties.jerhz_efs_dir))
     if not os.path.isdir(properties.jerhz_efs_dir):
-        print("        [ERROR]: Invalid dir <{}>".format(properties.jerhz_efs_dir))
+        print("        [ERROR]: Dir not found or Invalid")
         sys.exit(1)
 
     user_dao_linux = LinuxDAO()
@@ -27,7 +27,7 @@ def run(args):
 
         result = shell.run(["id","-u",user.get_username()])
         if result["return_code"] != 0:
-            print("        [ERROR] Unable to validate environment for user <{}>".format(user.get_username()))
+            print("        [ERROR] Unable to validate environment.")
             sys.exit(1)
 
         m = re.compile("^\d*$")
@@ -35,21 +35,34 @@ def run(args):
             print("        User <{}> already deployed".format(user.get_username()))
             continue
 
-        print("    Creating user <{}>\n".format(user.get_username()))
-        result = shell.run(["useradd","-u",str(user.get_uid()),"-g",str(user.get_gid()),user.get_username()])
+        print("    Creating user <{}>".format(user.get_username()))
+        result = shell.run(["useradd",user.get_username()])
         if result["return_code"] != 0:
-            print("        [ERROR] Unable to create user <{}>".format(user.get_username()))
+            print("        [ERROR] Unable to create user.")
             continue
 
         user_password = user.get_password()
         if user_password:
-            print("    Creating password for user <{}>\n".format(user.get_username()))
+            print("    Creating password for user <{}>".format(user.get_username()))
             user_password = cipher.aes.decrypt(user_password).decode("utf-8")
-            print(user_password)
             result = shell.run(["passwd",user_password])
+            user_password = None
             if result["return_code"] != 0:
-                print("        [ERROR] Unable to create user <{}>".format(user.get_username()))
+                print("        [ERROR] Unable to create user password.")
                 continue
 
+        print("    Assigning uid <{}> to user <{}>".format(user.get_uid(),user.get_username()))
+        result = shell.run(["usermod","-u",str(user.get_uid()),user.get_username()])
+        if result["return_code"] != 0:
+            print("        [ERROR] Unable to assign uid.")
+            continue
 
-    print(">>> Done.")
+        print("    Assigning gid <{}> to user <{}>".format(user.get_gid(),user.get_username()))
+        result = shell.run(["groupmod","-g",str(user.get_gid()),user.get_username()])
+        if result["return_code"] != 0:
+            print("        [ERROR] Unable to assign gid.")
+            continue
+
+        print("")
+
+    print("<<< Done.")

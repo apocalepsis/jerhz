@@ -20,3 +20,6 @@ lib
         model.py
             linux.py
             zeppelin.py
+
+To install pycrypto on emr
+python3 -m pip install pycrypto

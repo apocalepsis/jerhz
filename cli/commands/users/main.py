@@ -24,7 +24,7 @@ Available Commands:
     [get-all]
         Get all users
     [get-user]
-        Get a specific user
+        Get user(s) that match a specific attribute
     [delete-all]
         Delete all users
     [delete-user]
@@ -51,7 +51,7 @@ def run(args):
         subcommands.get_all.run(args)
 
     elif option in ["get-user"]:
-        pass
+        subcommands.get_user.run(args)
 
     elif option in ["delete-all"]:
         pass

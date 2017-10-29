@@ -36,3 +36,14 @@ class Validator:
         else:
             m = re.compile("^\d{4,8}$")
             return m.match(gid)
+
+    def is_valid_attr_name(self,attr_name):
+        if not attr_name:
+            return False
+        return True
+
+    def is_valid_attr_value(self,attr_value):
+        if not attr_value:
+            return False
+        return True
+

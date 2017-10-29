@@ -1,6 +1,5 @@
 import sys
 
-# from lib.users.model.linux import User as LinuxUser
 from lib.users.dao.linux import DAO as LinuxDAO
 from lib.utils import cipher
 

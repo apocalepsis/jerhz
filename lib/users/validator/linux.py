@@ -40,7 +40,10 @@ class Validator:
     def is_valid_attr_name(self,attr_name):
         if not attr_name:
             return False
-        return True
+        elif attr_name not in ["username","type","uid","gid"]:
+            return False
+        else:
+            return True
 
     def is_valid_attr_value(self,attr_value):
         if not attr_value:

@@ -75,7 +75,7 @@ class DAO:
             conn = mysql.connect(host=self.db_host,database=self.db_name,
                 user=self.db_user,password=self.db_password)
 
-            sql = "DELETE * FROM users"
+            sql = "DELETE FROM users"
 
             cursor = conn.cursor()
             cursor.execute(sql)

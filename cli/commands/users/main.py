@@ -54,10 +54,10 @@ def run(args):
         subcommands.get_user.run(args)
 
     elif option in ["delete-all"]:
-        pass
+        subcommands.delete_all.run(args)
 
     elif option in ["delete-user"]:
-        pass
+        subcommands.delete_user.run(args)
 
     else:
         print("[ERROR] Invalid option <{}>. Please use -h or -help for more information".format(option))

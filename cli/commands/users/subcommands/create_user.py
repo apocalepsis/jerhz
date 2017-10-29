@@ -1,12 +1,16 @@
 import sys
 
+from lib.users.model.linux import User as LinuxUser
+from lib.users.dao.linux import DAO as LinuxDAO
+from lib.users.validator.linux import Validator as LinuxValidator
+from lib.utils import cipher
+
 params = {
     "username" : None,
     "password" : None,
     "type" : None,
     "uid" : None,
-    "gid" : None,
-    "db" : None
+    "gid" : None
 }
 
 def display_help():
@@ -33,7 +37,7 @@ Available Parameters:
         Required: yes
         Notes:
             * Must be between <8-20> characters length.
-            * Must include at least one of the following special characters #$@!%&*?
+            * Must include at least one of the special characters #$@!%&*?
             * Must include at least one upper and lower case letters
             * Must include at least one digit
     [-type <system|standard>]
@@ -83,9 +87,6 @@ def run(args):
             except:
                 print("[ERROR] Unable to read value for parameter <{0}>".format(p))
                 sys.exit(1)
-            if not v:
-                print("[ERROR] Parameter <{0}> is required".format(p))
-                sys.exit(1)
             params["username"] = v
 
         elif p in ["-password"]:
@@ -94,9 +95,6 @@ def run(args):
                 v = args.pop(0)
             except:
                 print("[ERROR] Unable to read value for parameter <{0}>".format(p))
-                sys.exit(1)
-            if not v:
-                print("[ERROR] Parameter <{0}> is required".format(p))
                 sys.exit(1)
             params["password"] = v
 
@@ -107,9 +105,6 @@ def run(args):
             except:
                 print("[ERROR] Unable to read value for parameter <{0}>".format(p))
                 sys.exit(1)
-            if not v:
-                print("[ERROR] Parameter <{0}> is required".format(p))
-                sys.exit(1)
             params["type"] = v
 
         elif p in ["-uid"]:
@@ -118,9 +113,6 @@ def run(args):
                 v = args.pop(0)
             except:
                 print("[ERROR] Unable to read value for parameter <{0}>".format(p))
-                sys.exit(1)
-            if not v:
-                print("[ERROR] Parameter <{0}> is required".format(p))
                 sys.exit(1)
             params["uid"] = v
 
@@ -131,21 +123,44 @@ def run(args):
             except:
                 print("[ERROR] Unable to read value for parameter <{0}>".format(p))
                 sys.exit(1)
-            if not v:
-                print("[ERROR] Parameter <{0}> is required".format(p))
-                sys.exit(1)
             params["gid"] = v
 
         else:
             print("[ERROR] Invalid parameter <{0}>".format(p))
             sys.exit(1)
 
-    # VALIDATIONS
+    validator = LinuxValidator()
 
-    # username
-    if not params["username"]:
-        print("[ERROR] Parameter <username> is required")
+    p = params["username"]
+    if not validator.is_valid_username(p):
+        print("[ERROR] Invalid value <{}> for parameter <username>".format(p))
         sys.exit(1)
-    # if not users_validators.param_username_validator.run(params["username"]):
-    #    print("[ERROR] Invalid value <{0}> for parameter <username>".format(params["username"]))
-    #    sys.exit(1)
+
+    p = params["password"]
+    if not validator.is_valid_password(p):
+        print("[ERROR] Invalid value <{}> for parameter <password>".format(p))
+        sys.exit(1)
+    else:
+        params["password"] = cipher.aes.encrypt(params["password"]).decode("utf-8")
+
+    p = params["type"]
+    if not validator.is_valid_type(p):
+        print("[ERROR] Invalid value <{}> for parameter <type>".format(p))
+        sys.exit(1)
+
+    p = params["uid"]
+    if not validator.is_valid_uid(p):
+        print("[ERROR] Invalid value <{}> for parameter <uid>".format(p))
+        sys.exit(1)
+
+    p = params["gid"]
+    if not validator.is_valid_gid(p):
+        print("[ERROR] Invalid value <{}> for parameter <gid>".format(p))
+        sys.exit(1)
+
+    try:
+        user = LinuxUser(params["username"],params["password"],params["type"],params["uid"],params["gid"])
+        user_dao = LinuxDAO()
+        user_dao.save(user)
+    except Exception as e:
+        print("[ERROR] {}".format(e))

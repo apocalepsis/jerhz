@@ -48,7 +48,7 @@ def run(args):
         subcommands.create_user.run(args)
 
     elif option in ["get-all"]:
-        pass
+        subcommands.get_all.run(args)
 
     elif option in ["get-user"]:
         pass

@@ -12,10 +12,15 @@ class DAO:
 
     def save(self,user):
 
-        result = {
-            "status" : 0,
-            "payload" : None
-        }
+        found = len(self.get_by_attr("username",user.get_username())) > 0
+
+        if found:
+            raise Exception("A user with username <{}> already exists".format(user.get_username()))
+
+        found = len(self.get_by_attr("uid",user.get_uid())) > 0
+
+        if found:
+            raise Exception("A user with uid <{}> already exists".format(user.get_uid()))
 
         conn = None
         cursor = None
@@ -26,15 +31,11 @@ class DAO:
                 user=self.db_user,password=self.db_password)
 
             sql = "INSERT INTO users VALUES ('{}','{}','{}',{},{})".format(
-                user.username,user.password,user.type,user.uid,user.gid)
+                user.get_username(),user.get_password(),user.get_type(),user.get_uid(),user.get_gid())
 
             cursor = conn.cursor()
             cursor.execute(sql)
             conn.commit()
-
-        except Exception as e:
-            result["status"] = 1
-            result["payload"] = e
 
         finally:
             if cursor:
@@ -42,14 +43,7 @@ class DAO:
             if conn:
                 conn.close()
 
-        return result
-
     def delete_by_attr(self,attr,value):
-
-        result = {
-            "status" : 0,
-            "payload" : None
-        }
 
         conn = None
         cursor = None
@@ -65,24 +59,13 @@ class DAO:
             cursor.execute(sql)
             conn.commit()
 
-        except Exception as e:
-            result["status"] = 1
-            result["payload"] = e
-
         finally:
             if cursor:
                 cursor.close()
             if conn:
                 conn.close()
 
-        return result
-
     def delete_all(self):
-
-        result = {
-            "status" : 0,
-            "payload" : None
-        }
 
         conn = None
         cursor = None
@@ -98,24 +81,15 @@ class DAO:
             cursor.execute(sql)
             conn.commit()
 
-        except Exception as e:
-            result["status"] = 1
-            result["payload"] = e
-
         finally:
             if cursor:
                 cursor.close()
             if conn:
                 conn.close()
 
-        return result
-
     def get_by_attr(self,attr,value):
 
-        result = {
-            "status" : 0,
-            "payload" : []
-        }
+        result = []
 
         conn = None
         cursor = None
@@ -131,12 +105,8 @@ class DAO:
             cursor.execute(sql)
 
             for row in cursor:
-                user = User(username=row[0],password=row[1],type=row[2],uid=row[3],gid=row[4])
-                result["payload"].append(user)
-
-        except Exception as e:
-            result["status"] = 1
-            result["payload"] = e
+                user = User(row[0],row[1],row[2],row[3],row[4])
+                result.append(user)
 
         finally:
             if cursor:
@@ -148,10 +118,7 @@ class DAO:
 
     def get_all(self):
 
-        result = {
-            "status" : 0,
-            "payload" : []
-        }
+        result = []
 
         conn = None
         cursor = None
@@ -167,12 +134,8 @@ class DAO:
             cursor.execute(sql)
 
             for row in cursor:
-                user = User(username=row[0],password=row[1],type=row[2],uid=row[3],gid=row[4])
-                result["payload"].append(user)
-
-        except Exception as e:
-            result["status"] = 1
-            result["payload"] = e
+                user = User(row[0],row[1],row[2],row[3],row[4])
+                result.append(user)
 
         finally:
             if cursor:

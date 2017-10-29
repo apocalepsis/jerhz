@@ -49,8 +49,8 @@ def run(args):
             user_password = user.get_password()
             if user_password:
                 print("Creating password for user <{}>".format(user.get_username()))
-                user_password = cipher.aes.decrypt(user_password).decode("utf-8")
-                result = shell.run(["passwd",user_password])
+                cmd = "echo '{}' | passwd {} --stdin".format(user_password,user.get_username())
+                result = shell.run(cmd)
                 print(result)
                 user_password = None
                 if result["return_code"] != 0:

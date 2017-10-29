@@ -56,8 +56,6 @@ def run(args):
                 if result["return_code"] != 0:
                     print("[ERROR] Unable to create user password.")
                     continue
-                elif result["out"]:
-                    continue
 
         if not user_exists:
             print("Assigning uid <{}> to user <{}>".format(user.get_uid(),user.get_username()))
@@ -89,6 +87,8 @@ def run(args):
                 if result["return_code"] != 0:
                     print("[ERROR] Unable to create ggroup.")
                     continue
+                elif result["out"]:
+                    continue
 
             if group_exists:
                 print("Group exists, adding user.")
@@ -96,6 +96,8 @@ def run(args):
                 print(result)
                 if result["return_code"] != 0:
                     print("[ERROR] Unable to assign gid to user.")
+                    continue
+                elif result["out"]:
                     continue
 
         print("")

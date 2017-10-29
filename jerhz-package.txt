@@ -1,0 +1,36 @@
+jerhz.py
+cli
+    main.py
+    users
+        main.py
+        commands
+            create-user.py
+            get-all.py
+            get-user.py
+            update-user.py
+            delete-all.py
+            delete-user.py
+lib
+    users
+        daos
+            linux.py
+            zeppelin.py
+        validators
+            main.py
+        model.py
+            linux.py
+            zeppelin.py
+
+To install pycrypto on emr
+python3 -m pip install pycrypto
+
+
+[shiro.ini]
+hashService = org.apache.shiro.crypto.hash.DefaultHashService
+hashService.hashIterations = 500000
+hashService.hashAlgorithmName = SHA-256
+hashService.generatePublicSalt = true
+hashService.privateSalt = UzNjcmV0IVM0IXQ=
+
+[for command line password]
+java -cp shiro-tools-hasher-1.3.2-cli.jar:jerhz-shiro-tools-hasher-1.0.0.jar aws.falej.shiro.tools.hasher.ShiroHasher -p Passw0rd!

@@ -1,6 +1,8 @@
 import sys
 
 from lib.users.dao.linux import DAO as LinuxDAO
+from lib.users.dao.zeppelin import DAO as ZeppelinDAO
+
 from lib.users.validator.linux import Validator as LinuxValidator
 
 params = {
@@ -85,8 +87,14 @@ def run(args):
         print("[ERROR] Invalid value <{}> for parameter <attr-value>".format(p))
         sys.exit(1)
 
-    try:
-        user_dao = LinuxDAO()
-        user_dao.delete_by_attr(params["attr-name"],params["attr-value"])
-    except Exception as e:
-        print("[ERROR] {}".format(e))
+    user_dao_linux = LinuxDAO()
+    user_dao_zeppelin = ZeppelinDAO()
+
+    user_list = user_dao_linux.get_by_attr(params["attr-name"],params["attr-value"])
+
+    for user in user_list:
+        try:
+            user_dao_zeppelin.delete_by_attr("username",user.get_username())
+            user_dao_linux.delete_by_attr("username",user.get_username())
+        except Exception as e:
+            print("[ERROR] {}".format(e))

@@ -1,7 +1,11 @@
 import sys
 
 from lib.users.model.linux import User as LinuxUser
+from lib.users.model.zeppelin import User as ZeppelinUser
+
 from lib.users.dao.linux import DAO as LinuxDAO
+from lib.users.dao.zeppelin import DAO as ZeppelinDAO
+
 from lib.users.validator.linux import Validator as LinuxValidator
 from lib.utils import cipher
 
@@ -140,8 +144,6 @@ def run(args):
     if not validator.is_valid_password(p):
         print("[ERROR] Invalid value <{}> for parameter <password>".format(p))
         sys.exit(1)
-    else:
-        params["password"] = cipher.aes.encrypt(params["password"]).decode("utf-8")
 
     p = params["type"]
     if not validator.is_valid_type(p):
@@ -159,8 +161,15 @@ def run(args):
         sys.exit(1)
 
     try:
-        user = LinuxUser(params["username"],params["password"],params["type"],params["uid"],params["gid"])
+
+        user = LinuxUser(params["username"],cipher.aes.encrypt(params["password"]).decode("utf-8"),
+            params["type"],params["uid"],params["gid"])
         user_dao = LinuxDAO()
         user_dao.save(user)
+
+        user = ZeppelinUser(params["username"],cipher.shiro.hasher.hash(params["password"]))
+        user_dao = ZeppelinDAO()
+        user_dao.save(user)
+
     except Exception as e:
         print("[ERROR] {}".format(e))

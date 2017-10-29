@@ -46,7 +46,7 @@ def run(args):
                 continue
 
         if not user_exists:
-            user_password = user.get_password()
+            user_password = cipher.aes.decrypt(user.get_password()).decode("utf-8")
             if user_password:
                 print("Creating password for user <{}>".format(user.get_username()))
                 cmd = "echo '{}' | passwd {} --stdin".format(user_password,user.get_username())

@@ -36,7 +36,7 @@ def run(args):
             continue
 
         print("    Creating user <{}>\n".format(user.get_username()))
-        result = shell.run(["useradd","-u",user.get_uid(),"-g",user.get_gid(),user.get_username()])
+        result = shell.run(["useradd","-u",int(user.get_uid()),"-g",int(user.get_gid()),user.get_username()])
         if result["return_code"] != 0:
             print("        [ERROR] Unable to create user <{}>".format(user.get_username()))
             continue

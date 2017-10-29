@@ -1,13 +1,13 @@
 from subprocess import Popen, PIPE, STDOUT
 
-def run(cmd,cwdir=None):
+def run(cmd,pshell=False,cwdir=None):
 
     result = {
         "return_code" : 0,
         "out" : None,
         "err" : None
     }
-    p = Popen(cmd,stdout=PIPE, stdin=PIPE, stderr=STDOUT,cwd=cwdir)
+    p = Popen(cmd,shell=pshell,stdout=PIPE, stdin=PIPE, stderr=STDOUT,cwd=cwdir)
     out, err = p.communicate()
     if out:
         result["out"] = out.decode("utf-8").strip()

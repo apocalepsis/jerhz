@@ -50,7 +50,7 @@ def run(args):
             if user_password:
                 print("Creating password for user <{}>".format(user.get_username()))
                 cmd = "echo '{}' | passwd {} --stdin".format(user_password,user.get_username())
-                result = shell.run(cmd)
+                result = shell.run(cmd,pshell=True)
                 print(result)
                 user_password = None
                 if result["return_code"] != 0:

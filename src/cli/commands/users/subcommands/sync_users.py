@@ -35,15 +35,48 @@ def run(args):
             user_exists = True
             print("User exists.")
 
-        if not user_exists:
-            print("Creating user <{}>".format(user.get_username()))
-            result = shell.run(["useradd",user.get_username()])
-            print(result)
-            if result["return_code"] != 0:
-                print("[ERROR] Unable to create user.")
-                continue
-            elif result["out"]:
-                continue
+        if user_exists:
+            continue
+
+        print("Checking user group status")
+
+        group_exists = False
+
+        result = shell.run(["getent","group",str(user.get_gid())])
+        print(result)
+        if result["return_code"] != 0:
+            print("[ERROR] Unable to check group status.")
+            continue
+        elif result["out"]:
+            group_exists = True
+
+        result = shell.run(["getent","group",str(user.get_username())])
+        print(result)
+        if result["return_code"] != 0:
+            print("[ERROR] Unable to check group status.")
+            continue
+        elif result["out"]:
+            group_exists = True
+
+        if group_exists:
+            continue
+
+        print("Group not exists, creating it.")
+        result = shell.run(["groupadd",str(user.get_username()),"-g",str(user.get_gid())])
+        print(result)
+        if result["return_code"] != 0:
+            print("[ERROR] Unable to create ggroup.")
+            continue
+
+
+        print("Creating user <{}>".format(user.get_username()))
+        result = shell.run(["useradd",user.get_username()])
+        print(result)
+        if result["return_code"] != 0:
+            print("[ERROR] Unable to create user.")
+            continue
+        elif result["out"]:
+            continue
 
         if not user_exists:
             user_password = cipher.aes.decrypt(user.get_password()).decode("utf-8")
@@ -69,26 +102,7 @@ def run(args):
 
         if not user_exists:
 
-            group_exists = False
-
-            result = shell.run(["getent","group",str(user.get_gid())])
-            print(result)
-            if result["return_code"] != 0:
-                print("[ERROR] Unable to check group status.")
-                continue
-            elif result["out"]:
-                group_exists = True
-
             print("Assigning gid <{}> to user <{}>".format(user.get_gid(),user.get_username()))
-            if not group_exists:
-                print("Group not exists, creating it.")
-                result = shell.run(["groupadd",str(user.get_username()),"-g",str(user.get_gid())])
-                print(result)
-                if result["return_code"] != 0:
-                    print("[ERROR] Unable to create ggroup.")
-                    continue
-                elif result["out"]:
-                    continue
 
             if group_exists:
                 print("Group exists, adding user.")

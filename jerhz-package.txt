@@ -34,3 +34,19 @@ hashService.privateSalt = UzNjcmV0IVM0IXQ=
 
 [for command line password]
 java -cp shiro-tools-hasher-1.3.2-cli.jar:jerhz-shiro-tools-hasher-1.0.0.jar aws.falej.shiro.tools.hasher.ShiroHasher -p Passw0rd!
+
+userdel -r afloresa
+
+find . -type d -name '__pycache__' -exec rm -rf {} \;
+
+afloresa|Passw0rd!|standard|8001|8001
+raisulir|S3cret!00|standard|8002|8002
+
+CREATE TABLE users (
+    username VARCHAR(50) PRIMARY KEY,
+    password VARCHAR(),
+    type TEXT,
+    uid INTEGER,
+    gid INTEGER
+)
+

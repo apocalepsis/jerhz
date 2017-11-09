@@ -73,6 +73,7 @@ def run(args):
         print(response)
 
         if response["status_code"] != 0:
+            print("")
             continue
 
         print("")

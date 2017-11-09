@@ -17,7 +17,7 @@ def create_user_group(user):
     user_group_exists = False
 
     shell_response = shell.run(["getent","group",str(user.get_gid())])
-    print(shell_response)
+    print("getent: " + str(shell_response))
 
     if shell_response["status_code"] not in [0,2]:
         response["err"] = shell_response["err"]
@@ -28,7 +28,7 @@ def create_user_group(user):
     if not user_group_exists:
         print("Creating user group with name <{}> and gid <{}>".format(user.get_username(),str(user.get_gid())))
         shell_response = shell.run(["groupadd","--gid",str(user.get_gid()),user.get_username()])
-        print(shell_response)
+        print("groupadd: " + str(shell_response))
         if shell_response["status_code"] != 0:
             response["err"] = shell_response["err"]
             response["status_code"] = 1
@@ -51,8 +51,8 @@ def create_user(user):
     user_exists = False
 
     if not user_exists:
-        shell_response = shell.run(["getent","passwd",str(user.get_gid())])
-        print(shell_response)
+        shell_response = shell.run(["getent","passwd",str(user.get_uid())])
+        print("getent[uid]: " + str(shell_response))
 
         if shell_response["status_code"] not in [0,2]:
             response["err"] = shell_response["err"]
@@ -62,7 +62,7 @@ def create_user(user):
 
     if not user_exists:
         shell_response = shell.run(["getent","passwd",user.get_username()])
-        print(shell_response)
+        print("getent[username]: " + str(shell_response))
 
         if shell_response["status_code"] not in [0,2]:
             response["err"] = shell_response["err"]
@@ -73,7 +73,7 @@ def create_user(user):
     if not user_exists:
         print("Creating user with username <{}> and uid <{}>".format(user.get_username(),str(user.get_uid())))
         shell_response = shell.run(["useradd","--uid",str(user.get_uid()),"--gid",str(user.get_gid()),user.get_username()])
-        print(shell_response)
+        print("useradd: " + str(shell_response))
         if shell_response["status_code"] != 0:
             response["err"] = shell_response["err"]
             response["status_code"] = 1
@@ -83,6 +83,7 @@ def create_user(user):
             print("Creating password for user <{}>".format(user.get_username()))
             cmd = "echo '{}' | passwd {} --stdin".format(user_password,user.get_username())
             shell_response = shell.run(cmd,pshell=True)
+            print("passwd: " + str(shell_response))
             if shell_response["status_code"] != 0:
                 response["err"] = shell_response["err"]
                 response["status_code"] = 1

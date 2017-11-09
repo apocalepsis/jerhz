@@ -2,7 +2,13 @@ import sys
 import os
 
 from config import properties
+from lib.utils import shell
 from lib.users.dao.linux import DAO as LinuxDAO
+
+def create_user_group(user):
+
+    print("Creating user group <{}>".format(user.get_username()))
+
 
 def run(args):
 
@@ -24,10 +30,11 @@ def run(args):
         print("User <{}> status".format(user.get_username()))
 
         user_dir = "{}/{}".format(properties.jerhz_users_dir,user.get_username())
-        print("Checking user dir <{}>".format(user_dir))
-        if not os.path.isdir(user_dir):
-            print("[ERROR]: Dir not found or invalid")
-            continue
+        user_dir_exists = os.path.isdir(user_dir)
+
+        if not user_dir_exists:
+            print("User not found, creating environment")
+            create_user_group(user)
 
         print("")
 

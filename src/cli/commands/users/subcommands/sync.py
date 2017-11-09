@@ -14,7 +14,7 @@ def create_user_group(user):
 
     user_group_exists = False
 
-    result = shell.run(["getent","group",user.get_gid()])
+    result = shell.run(["getent","group",str(user.get_gid())])
     print(result)
 
     if result["return_code"] != 0:

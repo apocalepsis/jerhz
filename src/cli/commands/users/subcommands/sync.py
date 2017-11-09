@@ -24,7 +24,7 @@ def create_user_group(user):
         user_group_exists = True
 
     if not user_group_exists:
-        print("Creating user group with name <{}> and gid <{}>".format(user.get_username(),str(user.get_gid()))
+        print("Creating user group with name <{}> and gid <{}>".format(user.get_username(),str(user.get_gid())))
         result = shell.run(["groupadd","-gid",user.get_gid(),user.get_username()])
         print(result)
         if result["return_code"] != 0:

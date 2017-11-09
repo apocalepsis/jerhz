@@ -18,7 +18,7 @@ def create_user_group(user):
     shell_response = shell.run(["getent","group",str(user.get_gid())])
     print(shell_response)
 
-    if shell_response["status_code"] != 0 or shell_response["status_code"] != 2:
+    if shell_response["status_code"] not in [0,2]:
         response["err"] = shell_response["err"]
         response["status_code"] = 1
     elif shell_response["out"]:

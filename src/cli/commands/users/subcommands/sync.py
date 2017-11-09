@@ -205,8 +205,8 @@ def setup_links(user):
                 response["status_code"] = 1
 
     if setup_rstudio_link:
-        shell_response = shell.run(["find",user_home_dir,"-name","jupyter"])
-        print("find[jupyter]: " + str(shell_response))
+        shell_response = shell.run(["find",user_home_dir,"-name","rstudio"])
+        print("find[rstudio]: " + str(shell_response))
         if shell_response["status_code"] != 0:
             response["err"] = shell_response["err"]
             response["status_code"] = 1

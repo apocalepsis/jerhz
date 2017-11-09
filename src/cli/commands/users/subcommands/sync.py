@@ -113,13 +113,13 @@ def create_dirs(user):
         print("Creating user dir <{}>".format(user_dir))
         # user dir
         shell_response = shell.run(["mkdir","-p",user_dir])
-        print("mkdir: " + shell_response)
+        print("mkdir: " + str(shell_response))
         if shell_response["status_code"] != 0:
             response["err"] = shell_response["err"]
             response["status_code"] = 1
         else:
             shell_response = shell.run(["chown","{}:{}".format(user.get_username(),user.get_username()),user_dir])
-            print("chown: " + shell_response)
+            print("chown: " + str(shell_response))
             if shell_response["status_code"] != 0:
                 response["err"] = shell_response["err"]
                 response["status_code"] = 1
@@ -132,13 +132,13 @@ def create_dirs(user):
         print("Creating user jupyter dir <{}>".format(user_dir))
         # user dir
         shell_response = shell.run(["mkdir","-p",userdir])
-        print("mkdir: " + shell_response)
+        print("mkdir: " + str(shell_response))
         if shell_response["status_code"] != 0:
             response["err"] = shell_response["err"]
             response["status_code"] = 1
         else:
             shell_response = shell.run(["chown","{}:{}".format(user.get_username(),user.get_username()),user_dir])
-            print("chown: " + shell_response)
+            print("chown: " + str(shell_response))
             if shell_response["status_code"] != 0:
                 response["err"] = shell_response["err"]
                 response["status_code"] = 1
@@ -148,13 +148,13 @@ def create_dirs(user):
         print("Creating user rstudio dir <{}>".format(user_dir))
         # user dir
         shell_response = shell.run(["mkdir","-p",userdir])
-        print("mkdir: " + shell_response)
+        print("mkdir: " + str(shell_response))
         if shell_response["status_code"] != 0:
             response["err"] = shell_response["err"]
             response["status_code"] = 1
         else:
             shell_response = shell.run(["chown","{}:{}".format(user.get_username(),user.get_username()),user_dir])
-            print("chown: " + shell_response)
+            print("chown: " + str(shell_response))
             if shell_response["status_code"] != 0:
                 response["err"] = shell_response["err"]
                 response["status_code"] = 1

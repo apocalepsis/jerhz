@@ -19,6 +19,6 @@ def run(args):
     for user in user_list:
 
         print("User <{}> status".format(user.get_username()))
-
+        print("")
 
     print("<<< Done.")

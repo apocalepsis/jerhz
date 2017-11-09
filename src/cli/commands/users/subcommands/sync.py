@@ -9,29 +9,40 @@ def create_user_group(user):
 
     response = {
         "status_code" : 0,
-        "message" : None
+        "out" : None,
+        "err" : None
     }
 
     user_group_exists = False
 
-    result = shell.run(["getent","group",str(user.get_gid())])
-    print(result)
+    shell_response = shell.run(["getent","group",str(user.get_gid())])
+    print(shell_response)
 
-    if result["return_code"] != 0:
-        print("[ERROR] Unable to check user status.")
-        response["status_code"] = 1
-    elif result["out"]:
+    if shell_response["status_code"] != 0:
+        response["err"] = "[ERROR] Unable to check user status."
+        response["return_code"] = 1
+    elif shell_response["out"]:
         user_group_exists = True
 
     if not user_group_exists:
         print("Creating user group with name <{}> and gid <{}>".format(user.get_username(),str(user.get_gid())))
-        result = shell.run(["groupadd","--gid",str(user.get_gid()),user.get_username()])
-        print(result)
-        if result["return_code"] != 0:
-            print("[ERROR] Unable to check user status.")
+        shell_response = shell.run(["groupadd","--gid",str(user.get_gid()),user.get_username()])
+        print(shell_response)
+        if shell_response["status_code"] != 0:
+            response["err"] = "[ERROR] Unable to create group."
             response["status_code"] = 1
 
     return response
+
+def create_user(user):
+
+    response = {
+        "status_code" : 0,
+        "message" : None
+    }
+
+    return response
+
 
 def run(args):
 
@@ -52,6 +63,7 @@ def run(args):
 
         print("User <{}>".format(user.get_username()))
 
+        print("User group...")
         response = create_user_group(user)
         print(response)
 

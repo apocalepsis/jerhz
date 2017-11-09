@@ -192,18 +192,30 @@ def setup_links(user):
         setup_rstudio_link = True
 
     if setup_jupyter_link:
-        shell_response = shell.run(["ln","-s",user_jerhz_jupyter,user_home_jupyter])
-        print("ln[jupyter]: " + str(shell_response))
+        shell_response = shell.run(["find",user_home_dir,"-name","jupyter"])
+        print("find[jupyter]: " + str(shell_response))
         if shell_response["status_code"] != 0:
             response["err"] = shell_response["err"]
             response["status_code"] = 1
+        elif not shell_response["out"]:
+            shell_response = shell.run(["ln","-s",user_jerhz_jupyter,user_home_jupyter])
+            print("ln[jupyter]: " + str(shell_response))
+            if shell_response["status_code"] != 0:
+                response["err"] = shell_response["err"]
+                response["status_code"] = 1
 
     if setup_rstudio_link:
-        shell_response = shell.run(["ln","-s",user_jerhz_rstudio,user_home_rstudio])
-        print("ln[rstudio]: " + str(shell_response))
+        shell_response = shell.run(["find",user_home_dir,"-name","jupyter"])
+        print("find[jupyter]: " + str(shell_response))
         if shell_response["status_code"] != 0:
             response["err"] = shell_response["err"]
             response["status_code"] = 1
+        elif not shell_response["out"]:
+            shell_response = shell.run(["ln","-s",user_jerhz_rstudio,user_home_rstudio])
+            print("ln[rstudio]: " + str(shell_response))
+            if shell_response["status_code"] != 0:
+                response["err"] = shell_response["err"]
+                response["status_code"] = 1
 
     if response["status_code"] == 0:
         response["out"] = "SUCCESS"

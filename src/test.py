@@ -18,7 +18,7 @@ def run(cmd,pshell=False,cwdir=None):
 
 group_exists = False
 
-result = run(["getent","group","1000"])
+result = run(cmd=["getent","group","1000"])
 print(result)
 if result["return_code"] != 0:
     print("[ERROR] Unable to check user status.")

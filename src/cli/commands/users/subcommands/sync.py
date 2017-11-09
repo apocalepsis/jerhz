@@ -7,8 +7,8 @@ def run(args):
 
     print(">>> Sync in progress, please wait ... \n")
 
-    print("Checking jerhz dir <{}>\n".format(properties.jerhz_efs_dir))
-    if not os.path.isdir(properties.jerhz_efs_dir):
+    print("Checking jerhz users dir <{}>\n".format(properties.jerhz_users_dir))
+    if not os.path.isdir(properties.jerhz_users_dir):
         print("[ERROR]: Dir not found or invalid")
         sys.exit(1)
 

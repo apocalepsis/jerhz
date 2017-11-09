@@ -10,3 +10,4 @@ zeppelin_db_password = "Passw0rd!"
 
 jerhz_dir = "/var/lib/jerhz"
 jerhz_efs_dir = jerhz_dir + "/efs"
+jerhz_users_dir = jerhz_efs_dir + "/users"

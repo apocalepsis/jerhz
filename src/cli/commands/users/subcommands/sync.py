@@ -19,7 +19,7 @@ def create_user_group(user):
     print(shell_response)
 
     if shell_response["status_code"] != 0:
-        response["err"] = "[ERROR] Unable to check user status."
+        response["err"] = shell_response["err"]
         response["return_code"] = 1
     elif shell_response["out"]:
         user_group_exists = True
@@ -29,8 +29,11 @@ def create_user_group(user):
         shell_response = shell.run(["groupadd","--gid",str(user.get_gid()),user.get_username()])
         print(shell_response)
         if shell_response["status_code"] != 0:
-            response["err"] = "[ERROR] Unable to create group."
+            response["err"] = shell_response["err"]
             response["status_code"] = 1
+
+    if response["status_code"] == 0:
+        response["out"] = "SUCCESS"
 
     return response
 
@@ -63,8 +66,12 @@ def run(args):
 
         print("User <{}>".format(user.get_username()))
 
-        print("User group ...")
+        print("Setup user group ...")
         response = create_user_group(user)
+        print(response)
+
+        if response["status_code"] != 0:
+            continue
 
         print("")
 

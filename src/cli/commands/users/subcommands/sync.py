@@ -43,8 +43,44 @@ def create_user(user):
 
     response = {
         "status_code" : 0,
-        "message" : None
+        "out" : None,
+        "err" : None
     }
+
+    user_exists = False
+
+    if not user_exists:
+        shell_response = shell.run(["getent","passwd",str(user.get_gid())])
+        print(shell_response)
+
+        if shell_response["status_code"] not in [0,2]:
+            response["err"] = shell_response["err"]
+            response["status_code"] = 1
+        elif shell_response["out"]:
+            user_exists = True
+
+    if not user_exists:
+        shell_response = shell.run(["getent","passwd",user.get_username()])
+        print(shell_response)
+
+        if shell_response["status_code"] not in [0,2]:
+            response["err"] = shell_response["err"]
+            response["status_code"] = 1
+        elif shell_response["out"]:
+            user_exists = True
+
+    if not user_exists:
+        print("Creating user with username <{}> and uid <{}>".format(user.get_username(),str(user.get_uid())))
+        shell_response = shell.run(["useradd","--uid",str(user.get_uid()),"--gid",str(user.get_gid()),user.get_username()])
+        print(shell_response)
+        if shell_response["status_code"] != 0:
+            response["err"] = shell_response["err"]
+            response["status_code"] = 1
+
+    if response["status_code"] == 0:
+        response["out"] = "SUCCESS"
+    else:
+        response["err"] = "An error occurred during user setup"
 
     return response
 
@@ -73,8 +109,11 @@ def run(args):
         print(response)
 
         if response["status_code"] != 0:
-            print("")
             continue
+
+        print("Setup user ...")
+        response = create_user(user)
+        print(response)
 
         print("")
 

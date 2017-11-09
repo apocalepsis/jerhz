@@ -112,7 +112,7 @@ def create_dirs(user):
     if not user_dir_exists:
         print("Creating user dir <{}>".format(user_dir))
         # user dir
-        shell_response = shell.run(["mkdir","-p",userdir])
+        shell_response = shell.run(["mkdir","-p",user_dir])
         print("mkdir: " + shell_response)
         if shell_response["status_code"] != 0:
             response["err"] = shell_response["err"]

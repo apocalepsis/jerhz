@@ -7,6 +7,11 @@ from lib.users.dao.linux import DAO as LinuxDAO
 
 def create_user_group(user):
 
+    response = {
+        status_code : 0,
+        message : None
+    }
+
     user_group_exists = False
 
     result = shell.run(["getent","group",user.get_gid()])
@@ -14,7 +19,7 @@ def create_user_group(user):
 
     if result["return_code"] != 0:
         print("[ERROR] Unable to check user status.")
-        continue
+        response["status_code"] = 1
     elif result["out"]:
         user_group_exists = True
 
@@ -24,7 +29,9 @@ def create_user_group(user):
         print(result)
         if result["return_code"] != 0:
             print("[ERROR] Unable to check user status.")
-            continue
+            response["status_code"] = 1
+
+    return response
 
 def run(args):
 
@@ -35,22 +42,18 @@ def run(args):
         print("[ERROR]: Dir not found or invalid")
         sys.exit(1)
 
-    print("")
-
     user_dao_linux = LinuxDAO()
 
     user_list = user_dao_linux.get_all()
 
     for user in user_list:
 
-        print("User <{}> status".format(user.get_username()))
+        response = None
 
-        user_dir = "{}/{}".format(properties.jerhz_users_dir,user.get_username())
-        user_dir_exists = os.path.isdir(user_dir)
+        print("User <{}>".format(user.get_username()))
 
-        if not user_dir_exists:
-            print("User not found, creating environment")
-            create_user_group(user)
+        response = create_user_group(user)
+        print(response)
 
         print("")
 

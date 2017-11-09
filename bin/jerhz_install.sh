@@ -46,7 +46,7 @@ mkdir -p $JERHZ_DIR
 mount -t nfs -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2 $JERHZ_EFS_HOST:/ $JERHZ_DIR
 
 if [[ $NEW_SETUP = 1 ]]; then
-    printf "> Setting up new install ..."
+    printf "> Setting up new install ... "
     rm -rf "$JERHZ_DIR/*"
     mkdir -p "$JERHZ_EFS_DIR"
     mkdir -p "$JERHZ_USERS_DIR"
@@ -103,8 +103,6 @@ printf ">>> Setting up zeppelin ...\n"
 
 stop zeppelin
 
-printf "> Setting up shiro"
-
 aws s3 cp "$S3_REPO/zeppelin/zeppelin-site.xml" .
 mv "zeppelin-site.xml" "/usr/lib/zeppelin/conf/"
 
@@ -117,7 +115,8 @@ mv "zeppelin-env.sh" "/usr/lib/zeppelin/conf/"
 rm -rf "/var/lib/zeppelin/notebook"
 ln -s "$JERHZ_ZEPPELIN_NB_DIR" "/var/lib/zeppelin/notebook"
 
-printf "done.\n"
+usermod -u 8888 zeppelin
+groupmod -g 8888 zeppelin
 
 start zeppelin
 

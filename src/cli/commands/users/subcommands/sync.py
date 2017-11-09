@@ -3,6 +3,7 @@ import os
 
 from config import properties
 from lib.utils import shell
+from lib.utils import cipher
 from lib.users.dao.linux import DAO as LinuxDAO
 
 def create_user_group(user):
@@ -76,6 +77,16 @@ def create_user(user):
         if shell_response["status_code"] != 0:
             response["err"] = shell_response["err"]
             response["status_code"] = 1
+        else:
+            # password setup
+            user_password = cipher.aes.decrypt(user.get_password()).decode("utf-8")
+            print("Creating password for user <{}>".format(user.get_username()))
+            cmd = "echo '{}' | passwd {} --stdin".format(user_password,user.get_username())
+            shell_response = shell.run(cmd,pshell=True)
+            if shell_response["status_code"] != 0:
+                response["err"] = shell_response["err"]
+                response["status_code"] = 1
+            
 
     if response["status_code"] == 0:
         response["out"] = "SUCCESS"

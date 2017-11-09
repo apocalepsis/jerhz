@@ -115,9 +115,6 @@ mv "zeppelin-env.sh" "/usr/lib/zeppelin/conf/"
 rm -rf "/var/lib/zeppelin/notebook"
 ln -s "$JERHZ_ZEPPELIN_NB_DIR" "/var/lib/zeppelin/notebook"
 
-usermod -u 8888 zeppelin
-groupmod -g 8888 zeppelin
-
 start zeppelin
 
 printf "<<< Done.\n\n"

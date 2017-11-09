@@ -1,3 +1,5 @@
+import os
+
 from config import properties
 from lib.users.dao.linux import DAO as LinuxDAO
 

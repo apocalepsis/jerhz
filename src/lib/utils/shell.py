@@ -9,8 +9,8 @@ def run(cmd,pshell=False,cwdir=None):
     }
 
     p = Popen(cmd,shell=pshell,stdout=PIPE, stdin=PIPE, stderr=STDOUT,cwd=cwdir)
-    print("RETURN CODE: " + str(p.returncode))
     out, err = p.communicate()
+    print("RETURN CODE: " + str(p.returncode))
 
     if out:
         response["out"] = out.decode("utf-8").strip()

@@ -95,6 +95,74 @@ def create_user(user):
 
     return response
 
+def create_dirs(user):
+
+    response = {
+        "status_code" : 0,
+        "out" : None,
+        "err" : None
+    }
+
+    create_user_jupyter_dir = False
+    create_user_rstudio_dir = False
+
+    user_dir = properties.jerhz_users_dir + "/" + user.get_username()
+    user_dir_exists = os.path.isdir(user_dir)
+
+    if not user_dir_exists:
+        print("Creating user dir <{}>".format(user_dir))
+        # user dir
+        shell_response = shell.run(["mkdir","-p",userdir])
+        print("mkdir: " + shell_response)
+        if shell_response["status_code"] != 0:
+            response["err"] = shell_response["err"]
+            response["status_code"] = 1
+        else:
+            shell_response = shell.run(["chown","{}:{}".format(user.get_username(),user.get_username()),user_dir])
+            print("chown: " + shell_response)
+            if shell_response["status_code"] != 0:
+                response["err"] = shell_response["err"]
+                response["status_code"] = 1
+            else:
+                create_user_jupyter_dir = True
+                create_user_rstudio_dir = True
+
+    if create_user_jupyter_dir:
+        user_dir = properties.jerhz_users_dir + "/" + user.get_username() + "/jupyter"
+        print("Creating user jupyter dir <{}>".format(user_dir))
+        # user dir
+        shell_response = shell.run(["mkdir","-p",userdir])
+        print("mkdir: " + shell_response)
+        if shell_response["status_code"] != 0:
+            response["err"] = shell_response["err"]
+            response["status_code"] = 1
+        else:
+            shell_response = shell.run(["chown","{}:{}".format(user.get_username(),user.get_username()),user_dir])
+            print("chown: " + shell_response)
+            if shell_response["status_code"] != 0:
+                response["err"] = shell_response["err"]
+                response["status_code"] = 1
+
+    if create_user_rstudio_dir:
+        user_dir = properties.jerhz_users_dir + "/" + user.get_username() + "/rstudio"
+        print("Creating user rstudio dir <{}>".format(user_dir))
+        # user dir
+        shell_response = shell.run(["mkdir","-p",userdir])
+        print("mkdir: " + shell_response)
+        if shell_response["status_code"] != 0:
+            response["err"] = shell_response["err"]
+            response["status_code"] = 1
+        else:
+            shell_response = shell.run(["chown","{}:{}".format(user.get_username(),user.get_username()),user_dir])
+            print("chown: " + shell_response)
+            if shell_response["status_code"] != 0:
+                response["err"] = shell_response["err"]
+                response["status_code"] = 1
+
+    if response["status_code"] == 0:
+        response["out"] = "SUCCESS"
+    else:
+        response["err"] = "An error occurred during user setup"
 
 def run(args):
 
@@ -124,6 +192,13 @@ def run(args):
 
         print("Setup user ...")
         response = create_user(user)
+        print(response)
+
+        if response["status_code"] != 0:
+            continue
+
+        print("Setup directories ...")
+        response = create_dirs(user)
         print(response)
 
         print("")

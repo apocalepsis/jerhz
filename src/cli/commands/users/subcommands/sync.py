@@ -7,7 +7,7 @@ from lib.users.dao.linux import DAO as LinuxDAO
 
 def create_user_group(user):
 
-    print("Creating user group <{}>".format(user.get_username()))
+    print("Creating user group <{}> with gid <{}>".format(user.get_username(),user.get_gid()))
 
 
 def run(args):

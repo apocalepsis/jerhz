@@ -6,7 +6,7 @@ from lib.utils import shell
 from lib.utils import cipher
 from lib.users.dao.linux import DAO as LinuxDAO
 
-def create_user_group(user):
+def setup_user_group(user):
 
     response = {
         "status_code" : 0,
@@ -40,7 +40,7 @@ def create_user_group(user):
 
     return response
 
-def create_user(user):
+def setup_user(user):
 
     response = {
         "status_code" : 0,
@@ -96,7 +96,7 @@ def create_user(user):
 
     return response
 
-def create_dirs(user):
+def setup_dirs(user):
 
     response = {
         "status_code" : 0,
@@ -112,7 +112,6 @@ def create_dirs(user):
 
     if not user_dir_exists:
         print("Creating user dir <{}>".format(user_dir))
-        # user dir
         shell_response = shell.run(["mkdir","-p",user_dir])
         print("mkdir: " + str(shell_response))
         if shell_response["status_code"] != 0:
@@ -131,7 +130,6 @@ def create_dirs(user):
     if create_user_jupyter_dir:
         user_dir = properties.jerhz_users_dir + "/" + user.get_username() + "/jupyter"
         print("Creating user jupyter dir <{}>".format(user_dir))
-        # user dir
         shell_response = shell.run(["mkdir","-p",user_dir])
         print("mkdir: " + str(shell_response))
         if shell_response["status_code"] != 0:
@@ -147,7 +145,6 @@ def create_dirs(user):
     if create_user_rstudio_dir:
         user_dir = properties.jerhz_users_dir + "/" + user.get_username() + "/rstudio"
         print("Creating user rstudio dir <{}>".format(user_dir))
-        # user dir
         shell_response = shell.run(["mkdir","-p",user_dir])
         print("mkdir: " + str(shell_response))
         if shell_response["status_code"] != 0:
@@ -163,7 +160,55 @@ def create_dirs(user):
     if response["status_code"] == 0:
         response["out"] = "SUCCESS"
     else:
-        response["err"] = "An error occurred during user setup"
+        response["err"] = "An error occurred during directories setup"
+
+    return response
+
+def setup_links(user):
+
+    response = {
+        "status_code" : 0,
+        "out" : None,
+        "err" : None
+    }
+
+    setup_jupyter_link = False
+    setup_rstudio_link = False
+
+    user_home_dir = "/home/" + user.get_username()
+    user_jerhz_dir = properties.jerhz_users_dir + "/" + user.get_username()
+
+    user_home_dir_exists = os.path.isdir(user_home_dir)
+    user_jerhz_dir_exists = os.path.isdir(user_jerhz_dir)
+
+    user_home_jupyter = user_home_dir + "/jupyter"
+    user_home_rstudio = user_home_dir + "/rstudio"
+
+    user_jerhz_jupyter = user_jerhz_dir + "/jupyter"
+    user_jerhz_rstudio = user_jerhz_dir + "/rstudio"
+
+    if user_home_dir_exists and user_jerhz_dir_exists:
+        setup_jupyter_link = True
+        setup_rstudio_link = True
+
+    if setup_jupyter_link:
+        shell_response = shell.run(["ln","-s",user_jerhz_jupyter,user_home_jupyter])
+        print("ln[jupyter]: " + str(shell_response))
+        if shell_response["status_code"] != 0:
+            response["err"] = shell_response["err"]
+            response["status_code"] = 1
+
+    if setup_rstudio_link:
+        shell_response = shell.run(["ln","-s",user_jerhz_rstudio,user_home_rstudio])
+        print("ln[rstudio]: " + str(shell_response))
+        if shell_response["status_code"] != 0:
+            response["err"] = shell_response["err"]
+            response["status_code"] = 1
+
+    if response["status_code"] == 0:
+        response["out"] = "SUCCESS"
+    else:
+        response["err"] = "An error occurred during links setup"
 
     return response
 
@@ -187,21 +232,28 @@ def run(args):
         print("User <{}>".format(user.get_username()))
 
         print("Setup user group ...")
-        response = create_user_group(user)
+        response = setup_user_group(user)
         print(response)
 
         if response["status_code"] != 0:
             continue
 
         print("Setup user ...")
-        response = create_user(user)
+        response = setup_user(user)
         print(response)
 
         if response["status_code"] != 0:
             continue
 
         print("Setup directories ...")
-        response = create_dirs(user)
+        response = setup_dirs(user)
+        print(response)
+
+        if response["status_code"] != 0:
+            continue
+
+        print("Setup links ...")
+        response = setup_links(user)
         print(response)
 
         print("")

@@ -99,7 +99,7 @@ printf "<<< Done.\n\n"
 
 printf ">>> Setting up zeppelin ...\n"
 
-service zeppelin stop
+stop zeppelin
 
 printf "> Setting up shiro"
 
@@ -117,6 +117,6 @@ ln -s "$JERHZ_ZEPPELIN_NB_DIR" "/var/lib/zeppelin/notebook"
 
 printf "done.\n"
 
-service zeppelin start
+start zeppelin
 
 printf "<<< Done.\n\n"

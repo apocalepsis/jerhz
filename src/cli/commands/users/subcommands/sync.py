@@ -23,7 +23,7 @@ def run(args):
 
         print("User <{}> status".format(user.get_username()))
 
-        user_dir = "{}/{}".format(properties.jerhz_users_dir,user.get_username()))
+        user_dir = "{}/{}".format(properties.jerhz_users_dir,user.get_username())
         print("Checking user dir <{}>".format(user_dir))
         if not os.path.isdir(user_dir):
             print("[ERROR]: Dir not found or invalid")

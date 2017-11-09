@@ -8,8 +8,8 @@ from lib.users.dao.linux import DAO as LinuxDAO
 def create_user_group(user):
 
     response = {
-        status_code : 0,
-        message : None
+        "status_code" : 0,
+        "message" : None
     }
 
     user_group_exists = False

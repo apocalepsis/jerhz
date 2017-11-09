@@ -131,7 +131,7 @@ def create_dirs(user):
         user_dir = properties.jerhz_users_dir + "/" + user.get_username() + "/jupyter"
         print("Creating user jupyter dir <{}>".format(user_dir))
         # user dir
-        shell_response = shell.run(["mkdir","-p",userdir])
+        shell_response = shell.run(["mkdir","-p",user_dir])
         print("mkdir: " + str(shell_response))
         if shell_response["status_code"] != 0:
             response["err"] = shell_response["err"]
@@ -147,7 +147,7 @@ def create_dirs(user):
         user_dir = properties.jerhz_users_dir + "/" + user.get_username() + "/rstudio"
         print("Creating user rstudio dir <{}>".format(user_dir))
         # user dir
-        shell_response = shell.run(["mkdir","-p",userdir])
+        shell_response = shell.run(["mkdir","-p",user_dir])
         print("mkdir: " + str(shell_response))
         if shell_response["status_code"] != 0:
             response["err"] = shell_response["err"]

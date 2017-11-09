@@ -9,7 +9,7 @@ def run(cmd,pshell=False,cwdir=None):
     }
 
     p = Popen(cmd,shell=pshell,stdout=PIPE, stdin=PIPE, stderr=STDOUT,cwd=cwdir)
-    print(p)
+    print("RETURN CODE: " + p.returncode)
     out, err = p.communicate()
 
     if out:

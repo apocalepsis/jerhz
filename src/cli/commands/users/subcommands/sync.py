@@ -20,7 +20,7 @@ def create_user_group(user):
 
     if shell_response["status_code"] != 0:
         response["err"] = shell_response["err"]
-        response["return_code"] = 1
+        response["status_code"] = 1
     elif shell_response["out"]:
         user_group_exists = True
 

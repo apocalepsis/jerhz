@@ -48,7 +48,7 @@ def run(args):
 
     print(">>> Sync in progress, please wait ... \n")
 
-    print("Checking jerhz users dir <{}>".format(properties.jerhz_users_dir))
+    print("Checking jerhz users dir <{}>\n".format(properties.jerhz_users_dir))
     if not os.path.isdir(properties.jerhz_users_dir):
         print("[ERROR]: Dir not found or invalid")
         sys.exit(1)
@@ -63,9 +63,8 @@ def run(args):
 
         print("User <{}>".format(user.get_username()))
 
-        print("User group...")
+        print("User group ...")
         response = create_user_group(user)
-        print(response)
 
         print("")
 

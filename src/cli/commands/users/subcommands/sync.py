@@ -29,12 +29,13 @@ def create_user_group(user):
         shell_response = shell.run(["groupadd","--gid",str(user.get_gid()),user.get_username()])
         print(shell_response)
         if shell_response["status_code"] != 0:
-            print("entering")
             response["err"] = shell_response["err"]
             response["status_code"] = 1
 
     if response["status_code"] == 0:
         response["out"] = "SUCCESS"
+    else:
+        response["err"] = "An error occurred during user group setup"
 
     return response
 

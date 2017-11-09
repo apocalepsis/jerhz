@@ -164,6 +164,8 @@ def create_dirs(user):
     else:
         response["err"] = "An error occurred during user setup"
 
+    return response
+
 def run(args):
 
     print(">>> Sync in progress, please wait ... \n")

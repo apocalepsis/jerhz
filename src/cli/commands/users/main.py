@@ -29,7 +29,7 @@ Available Commands:
         Delete all users
     [delete-user]
         Deletes a specific user
-    [sync-users]
+    [sync]
         Sync environments of all users that currently exists on the database.
         WARNING: If a user not exists anymore, his environment will be deleted and all data,
         that was not backed up, will be lost
@@ -63,8 +63,8 @@ def run(args):
     elif option in ["delete-user"]:
         subcommands.delete_user.run(args)
 
-    elif option in ["sync-users"]:
-        subcommands.sync_users.run(args)
+    elif option in ["sync"]:
+        subcommands.sync.run(args)
 
     else:
         print("[ERROR] Invalid option <{}>. Please use -h or -help for more information".format(option))

@@ -26,7 +26,7 @@ def create_user_group(user):
 
     if not user_group_exists:
         print("Creating user group with name <{}> and gid <{}>".format(user.get_username(),str(user.get_gid())))
-        shell_response = shell.run(["groupadd","--gid",str(user.get_gid()),user.get_username()])
+        shell_response = shell.run(["groupadd","-gid",str(user.get_gid()),user.get_username()])
         print(shell_response)
         if shell_response["status_code"] != 0:
             response["err"] = shell_response["err"]

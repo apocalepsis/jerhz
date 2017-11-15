@@ -47,7 +47,7 @@ mount -t nfs -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2
 
 if [[ $NEW_SETUP = 1 ]]; then
     printf "> Setting up new install ... "
-    rm -rf "$JERHZ_DIR/*"
+    rm -rf $JERHZ_DIR/*
     mkdir -p "$JERHZ_EFS_DIR"
     mkdir -p "$JERHZ_USERS_DIR"
     mkdir -p "$JERHZ_ZEPPELIN_DIR"

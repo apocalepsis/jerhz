@@ -31,7 +31,7 @@ Available Commands:
         Deletes a specific user
     [sync]
         Sync environments of all users that currently exists on the database.
-        WARNING: If a user not exists anymore, his environment will be deleted and all data,
+        WARNING: If a user doesn't exists anymore, his environment will be deleted and all data,
         that was not backed up, will be lost
     """)
 

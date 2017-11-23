@@ -106,6 +106,7 @@ def setup_dirs(user):
 
     create_user_jupyter_dir = False
     create_user_rstudio_dir = False
+    create_user_outputs_dir = False
 
     user_dir = properties.jerhz_users_dir + "/" + user.get_username()
     user_dir_exists = os.path.isdir(user_dir)
@@ -126,6 +127,7 @@ def setup_dirs(user):
             else:
                 create_user_jupyter_dir = True
                 create_user_rstudio_dir = True
+                create_user_outputs_dir = True
 
     if create_user_jupyter_dir:
         user_dir = properties.jerhz_users_dir + "/" + user.get_username() + "/jupyter"
@@ -145,6 +147,21 @@ def setup_dirs(user):
     if create_user_rstudio_dir:
         user_dir = properties.jerhz_users_dir + "/" + user.get_username() + "/rstudio"
         print("Creating user rstudio dir <{}>".format(user_dir))
+        shell_response = shell.run(["mkdir","-p",user_dir])
+        print("mkdir: " + str(shell_response))
+        if shell_response["status_code"] != 0:
+            response["err"] = shell_response["err"]
+            response["status_code"] = 1
+        else:
+            shell_response = shell.run(["chown","{}:{}".format(user.get_username(),user.get_username()),user_dir])
+            print("chown: " + str(shell_response))
+            if shell_response["status_code"] != 0:
+                response["err"] = shell_response["err"]
+                response["status_code"] = 1
+
+    if create_user_outputs_dir:
+        user_dir = properties.jerhz_users_dir + "/" + user.get_username() + "/outputs"
+        print("Creating user outputs dir <{}>".format(user_dir))
         shell_response = shell.run(["mkdir","-p",user_dir])
         print("mkdir: " + str(shell_response))
         if shell_response["status_code"] != 0:

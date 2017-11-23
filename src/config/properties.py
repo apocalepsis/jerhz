@@ -8,6 +8,6 @@ zeppelin_db_name = "zeppelin"
 zeppelin_db_user = "dbadmin"
 zeppelin_db_password = "Passw0rd!"
 
-jerhz_dir = "/var/jerhz"
+jerhz_dir = "/opt/jerhz"
 jerhz_efs_dir = jerhz_dir + "/efs"
 jerhz_users_dir = jerhz_efs_dir + "/users"

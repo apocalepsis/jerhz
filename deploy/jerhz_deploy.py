@@ -13,10 +13,13 @@ aws_region = "us-east-1"
 logging_dir = "/var/log/jerhz"
 logging_filename = "jerhz_deploy_" + strftime("%Y-%m-%d_%H-%M-%S") + ".log"
 
+# :: JERHZ PROPERTIES ::
+jerhz_s3_repo = "s3://aws.jerhz.boi"
+
 # :: EMR PROPERTIES ::
 emr_name = "emr_boi"
-emr_s3_logging_uri = "s3://aws.jerhz.logging/"
-emr_instance_count = 2
+emr_s3_logging_uri = "s3://aws.jerhz.boi.logging/"
+emr_slave_instance_count = 2
 emr_ec2_key_name = "NVirginia"
 emr_keep_job_flow_alive_when_no_steps = True
 emr_termination_protected = False
@@ -43,8 +46,8 @@ r53_hosted_zone_id = "Z1NTB46Y263HW7"
 r53_resource_record_set_name = "awsome.website"
 
 # :: SES PROPERTIES ::
-email_from = "falej@amazon.com"
-email_to = "alejandro.x.flores@gmail.com"
+email_from = "rzrai13@gmail.com"
+email_to = ["alejandro.x.flores@gmail.com"]
 email_subject = "[BOI] EMR Cluster Deploy Notification"
 
 
@@ -85,7 +88,7 @@ def create_cluster():
             Instances = {
                 "MasterInstanceType" : emr_master_instance_type,
                 "SlaveInstanceType" : emr_slave_instance_type,
-                "InstanceCount" : emr_instance_count,
+                "InstanceCount" : emr_slave_instance_count,
                 "Ec2KeyName" : emr_ec2_key_name,
                 "KeepJobFlowAliveWhenNoSteps" : emr_keep_job_flow_alive_when_no_steps,
                 "TerminationProtected" : emr_termination_protected,
@@ -95,6 +98,56 @@ def create_cluster():
                 "AdditionalMasterSecurityGroups" : emr_master_instance_additional_security_groups,
                 "AdditionalSlaveSecurityGroups" : emr_slave_instance_additional_security_groups
             },
+            Steps = [
+                {
+                    "Name" : "jerhz-install",
+                    "ActionOnFailure" : "CONTINUE",
+                    "HadoopJarStep" : {
+                        "Jar" : "s3://us-east-1.elasticmapreduce/libs/script-runner/script-runner.jar",
+                        "Args" : [
+                            "{}/bin/jerhz-install.sh".format(jerhz_s3_repo)
+                        ]
+                    }
+                }
+            ],
+            BootstapActions = [
+                {
+                    "Name" : "jupyter-install",
+                    "ScriptBootstrapAction" : {
+                        "Path" : "{}/3p/jupyter/install-jupyter-emr5.sh".format(jerhz_s3_repo),
+                        "Args" : [
+                            "--ds-packages",
+                            "--ml-packages",
+                            "--python-packages",
+                            "ggplot nilearn",
+                            "--port","8585",
+                            "--user","oddjupy",
+                            "--password","boi2017",
+                            "--jupyterhub",
+                            "--jupyterhub-port","8686",
+                            "--cached-install",
+                            "--python3"
+                        ]
+                    }
+                },
+                {
+                    "Name" : "rstudio-install",
+                    "ScriptBootstrapAction" : {
+                        "Path" : "{}/3p/rstudio/rstudio_sparklyr_emr5.sh".format(jerhz_s3_repo),
+                        "Args" : [
+                            "--sparklyr",
+                            "--rstudio",
+                            "--shiny",
+                            "--sparkr",
+                            "--rexamples",
+                            "--plyrmr",
+                            "--cloudyr",
+                            "--user","oddstudio",
+                            "--user-pw","boi2017"
+                        ]
+                    }
+                }
+            ],
             Applications = emr_applications,
             VisibleToAllUsers = emr_visible_to_all_users,
             JobFlowRole = emr_job_flow_role,
@@ -227,7 +280,7 @@ def send_email(body_text,body_html):
         ses_response = ses_client.send_email(
             Source = email_from,
             Destination = {
-                "ToAddresses" : [email_to]
+                "ToAddresses" : email_to
             },
             Message = {
                 "Body" : {

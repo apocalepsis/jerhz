@@ -19,12 +19,14 @@ emr_name = "emr_boi"
 # :: R53 PROPERTIES ::
 r53_hosted_zone_id = "Z1NTB46Y263HW7"
 r53_resource_record_set_name = "awsome.website"
+
+# NOTE: No cambiar estos valores
 r53_resource_record_set_alias_hosted_zone_id = "Z3AQBSTGFYJSTF" #Extracted from http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
 r53_resource_record_set_alias_name = "s3-website-us-east-1.amazonaws.com"
 
 # :: SES PROPERTIES ::
 email_from = "falej@amazon.com"
-email_to = "alejandro.x.flores@gmail.com"
+email_to = ["alejandro.x.flores@gmail.com"]
 email_subject = "[BOI] EMR Cluster Undeploy Notification"
 
 
@@ -194,7 +196,7 @@ def send_email(body_text,body_html):
         ses_response = ses_client.send_email(
             Source = email_from,
             Destination = {
-                "ToAddresses" : [email_to]
+                "ToAddresses" : email_to
             },
             Message = {
                 "Body" : {

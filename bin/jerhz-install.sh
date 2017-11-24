@@ -9,9 +9,9 @@ JERHZ_EFS_DIR="$JERHZ_DIR/efs"
 JERHZ_USERS_DIR="$JERHZ_EFS_DIR/users"
 JERHZ_ZEPPELIN_DIR="$JERHZ_EFS_DIR/zeppelin"
 JERHZ_ZEPPELIN_NB_DIR="$JERHZ_ZEPPELIN_DIR/notebook"
-JERHZ_EFS_HOST="fs-9dfed3d4.efs.us-east-1.amazonaws.com"
+JERHZ_EFS_HOST="fs-267d516f.efs.us-east-1.amazonaws.com"
 
-S3_JERHZ_REPO="s3://aws.jerhz"
+S3_JERHZ_REPO="s3://aws.jerhz.boi"
 S3_3P_REPO="$S3_JERHZ_REPO/3p"
 
 ZEPPELIN_DIR="/usr/lib/zeppelin"
@@ -57,11 +57,13 @@ if [[ $NEW_SETUP = 1 ]]; then
     sudo rm -rf $JERHZ_EFS_DIR/*
     sudo mkdir -p "$JERHZ_USERS_DIR"
     sudo mkdir -p "$JERHZ_ZEPPELIN_DIR"
-    sudo chown zeppelin:zeppelin "$JERHZ_ZEPPELIN_DIR"
     sudo mkdir -p "$JERHZ_ZEPPELIN_NB_DIR"
-    sudo chown zeppelin:zeppelin "$JERHZ_ZEPPELIN_NB_DIR"
     printf "done.\n"
 fi
+
+printf "> Setting up zeppelin folder ... "
+sudo chmod -R o+w "$JERHZ_ZEPPELIN_DIR"
+printf "done.\n"
 
 printf "> Setting up library ... \n"
 

@@ -124,10 +124,23 @@ def set_dns_to_s3():
                                 "EvaluateTargetHealth" : False
                             }
                         }
+                    },
+                    {
+                        "Action" : "UPSERT",
+                        "ResourceRecordSet" : {
+                            "Name" : "www.{}".format(r53_resource_record_set_name),
+                            "Type" : "A",
+                            "AliasTarget" : {
+                                "HostedZoneId" : r53_resource_record_set_alias_hosted_zone_id,
+                                "DNSName" : r53_resource_record_set_alias_name,
+                                "EvaluateTargetHealth" : False
+                            }
+                        }
                     }
                 ]
             }
         )
+        print("R53 RESPONSE: {}".format(r53_response))
     except Exception as e:
         response["status_code"] = 1
         response["payload"] = e

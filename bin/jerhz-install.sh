@@ -9,9 +9,9 @@ JERHZ_EFS_DIR="$JERHZ_DIR/efs"
 JERHZ_USERS_DIR="$JERHZ_EFS_DIR/users"
 JERHZ_ZEPPELIN_DIR="$JERHZ_EFS_DIR/zeppelin"
 JERHZ_ZEPPELIN_NB_DIR="$JERHZ_ZEPPELIN_DIR/notebook"
-JERHZ_EFS_HOST="fs-e3c4e3aa.efs.us-east-1.amazonaws.com"
+JERHZ_EFS_HOST="fs-9dfed3d4.efs.us-east-1.amazonaws.com"
 
-S3_JERHZ_REPO="s3://aws.demos.jerhz"
+S3_JERHZ_REPO="s3://aws.jerhz"
 S3_3P_REPO="$S3_JERHZ_REPO/3p"
 
 ZEPPELIN_DIR="/usr/lib/zeppelin"
@@ -63,7 +63,7 @@ if [[ $NEW_SETUP = 1 ]]; then
     printf "done.\n"
 fi
 
-printf "> Setting up library ... "
+printf "> Setting up library ... \n"
 
 sudo mkdir -p "$JERHZ_DIR/src"
 sudo rm -rf $JERHZ_DIR/src/*
@@ -118,7 +118,7 @@ sudo aws s3 cp "$S3_3P_REPO/zeppelin/conf/zeppelin-site.xml" .
 sudo chown zeppelin:zeppelin "zeppelin-site.xml"
 
 sudo aws s3 cp "$S3_3P_REPO/zeppelin/conf/zeppelin-env.sh" .
-sudo chown zeppelin:zeppelin "zeppelin-env.xml"
+sudo chown zeppelin:zeppelin "zeppelin-env.sh"
 
 sudo aws s3 cp "$S3_3P_REPO/zeppelin/conf/interpreter.json" .
 sudo chown zeppelin:zeppelin "interpreter.json"
@@ -144,7 +144,7 @@ printf "<<< Done.\n\n"
 
 cd "$JERHZ_TMP_DIR"
 
-printf "> Setting up users ... "
+printf "> Setting up users ... \n"
 
 cd "$JERHZ_SRC_DIR"
 sudo python3 jerhz-cli.py users sync

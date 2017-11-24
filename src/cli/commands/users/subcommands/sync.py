@@ -191,6 +191,7 @@ def setup_links(user):
 
     setup_jupyter_link = False
     setup_rstudio_link = False
+    setup_outputs_link = False
 
     user_home_dir = "/home/" + user.get_username()
     user_jerhz_dir = properties.jerhz_users_dir + "/" + user.get_username()
@@ -200,13 +201,16 @@ def setup_links(user):
 
     user_home_jupyter = user_home_dir + "/jupyter"
     user_home_rstudio = user_home_dir + "/rstudio"
+    user_home_outputs = user_home_dir + "/outputs"
 
     user_jerhz_jupyter = user_jerhz_dir + "/jupyter"
     user_jerhz_rstudio = user_jerhz_dir + "/rstudio"
+    user_jerhz_outputs = user_jerhz_dir + "/outputs"
 
     if user_home_dir_exists and user_jerhz_dir_exists:
         setup_jupyter_link = True
         setup_rstudio_link = True
+        setup_outputs_link = True
 
     if setup_jupyter_link:
         shell_response = shell.run(["find",user_home_dir,"-name","jupyter"])
@@ -229,6 +233,19 @@ def setup_links(user):
             response["status_code"] = 1
         elif not shell_response["out"]:
             shell_response = shell.run(["ln","-s",user_jerhz_rstudio,user_home_rstudio])
+            print("ln[rstudio]: " + str(shell_response))
+            if shell_response["status_code"] != 0:
+                response["err"] = shell_response["err"]
+                response["status_code"] = 1
+
+    if setup_outputs_link:
+        shell_response = shell.run(["find",user_home_dir,"-name","outputs"])
+        print("find[outputs]: " + str(shell_response))
+        if shell_response["status_code"] != 0:
+            response["err"] = shell_response["err"]
+            response["status_code"] = 1
+        elif not shell_response["out"]:
+            shell_response = shell.run(["ln","-s",user_jerhz_outputs,user_home_outputs])
             print("ln[rstudio]: " + str(shell_response))
             if shell_response["status_code"] != 0:
                 response["err"] = shell_response["err"]

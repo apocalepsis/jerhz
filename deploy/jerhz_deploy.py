@@ -15,7 +15,7 @@ logging_filename = "jerhz_deploy_" + strftime("%Y-%m-%d_%H-%M-%S") + ".log"
 
 # :: EMR PROPERTIES ::
 emr_name = "emr_boi"
-emr_s3_logging_uri = "s3://aws.demos.jerhz/3p/emr/logging/"
+emr_s3_logging_uri = "s3://aws.jerhz.logging/"
 emr_instance_count = 2
 emr_ec2_key_name = "NVirginia"
 emr_keep_job_flow_alive_when_no_steps = True
@@ -27,13 +27,13 @@ emr_applications = [
     {"Name" : "Hive"},
     {"Name" : "Zeppelin"}
 ]
-emr_subnet_id = "subnet-bce63e83"
+emr_subnet_id = "subnet-d33c87ec"
 emr_master_instance_type = "m3.xlarge"
-emr_master_instance_security_group = "sg-6c08881e"
-emr_master_instance_additional_security_groups = ["sg-8e1090fc"]
+emr_master_instance_security_group = "sg-728f2407"
+emr_master_instance_additional_security_groups = ["sg-998c27ec"]
 emr_slave_instance_type = "m3.xlarge"
-emr_slave_instance_security_group = "sg-1d07876f"
-emr_slave_instance_additional_security_groups = ["sg-8e1090fc"]
+emr_slave_instance_security_group = "sg-938b20e6"
+emr_slave_instance_additional_security_groups = ["sg-998c27ec"]
 emr_visible_to_all_users = True
 emr_job_flow_role = "EMR_EC2_DefaultRole"
 emr_service_role = "EMR_DefaultRole"
@@ -146,6 +146,17 @@ def set_dns_to_emr(emr_cluster):
                                 "Action" : "UPSERT",
                                 "ResourceRecordSet" : {
                                     "Name" : r53_resource_record_set_name,
+                                    "Type" : "A",
+                                    "TTL" : 60,
+                                    "ResourceRecords" : [
+                                        {"Value" : emr_cluster_ip}
+                                    ]
+                                }
+                            },
+                            {
+                                "Action" : "UPSERT",
+                                "ResourceRecordSet" : {
+                                    "Name" : "www.{}".format(r53_resource_record_set_name),
                                     "Type" : "A",
                                     "TTL" : 60,
                                     "ResourceRecords" : [

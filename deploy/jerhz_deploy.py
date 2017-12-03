@@ -110,7 +110,7 @@ def create_cluster():
                     }
                 }
             ],
-            BootstapActions = [
+            BootstrapActions = [
                 {
                     "Name" : "jupyter-install",
                     "ScriptBootstrapAction" : {
